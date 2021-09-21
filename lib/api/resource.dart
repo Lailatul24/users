@@ -15,7 +15,7 @@ class Resource {
 
     try {
       final res = await http.get(url).timeout(const Duration(seconds: 11));
-      print(res.body);
+      // print(res.body);
       if (res.statusCode == 200) {
         return BarangModel.fromJson(res.body);
       } else if (res.statusCode == 404) {
@@ -37,11 +37,11 @@ class Resource {
   }
 
   Future getBarangId(String idBarang) async {
-    var url = Uri.parse(uri + '/barang/get_Id ' + idBarang);
+    var url = Uri.parse('$uri/barang/get_id/$idBarang');
 
     try {
       final res = await http.get(url).timeout(const Duration(seconds: 11));
-      print(res.body);
+      // print(res.body);
       if (res.statusCode == 200) {
         return BarangIdModel.fromJson(res.body);
       } else if (res.statusCode == 404) {
@@ -62,15 +62,22 @@ class Resource {
     }
   }
 
-  Future createPinjam(BuildContext context, String nama, String jumlahPinjam,
-      String tanggalPinjam, String tanggalKembali) async {
+  Future createPinjam(
+      BuildContext context,
+      String idUser,
+      String idBarang,
+      String idKategori,
+      String nama,
+      String stok,
+      String tanggalKembali) async {
     var body = jsonEncode({
-      'nama': nama,
-      'jumlah Pinjam': jumlahPinjam,
-      'TanggalPinjam': tanggalPinjam,
-      'Tanggal Kembali': tanggalKembali,
+      'id_user': idUser,
+      'id_barang': idBarang,
+      'id_kategori': idKategori,
+      'stok': stok,
+      'tkembali': tanggalKembali,
     });
-    var url = Uri.parse('$uri/pinjam');
+    var url = Uri.parse('$uri/pinjam/pinjam');
     try {
       final res = await http
           .post(url, headers: {'Content-Type': 'application/json'}, body: body)

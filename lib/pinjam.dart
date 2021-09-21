@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:users/controller/homeController.dart';
-import 'package:users/dashboard.dart';
+import 'package:http/http.dart' as http;
 
 class PinjamForm extends StatefulWidget {
-  // ignore: non_constant_identifier_names
   final String idBarang;
   const PinjamForm({Key key, this.idBarang}) : super(key: key);
 
@@ -16,9 +16,7 @@ class _PinjamFormState extends State<PinjamForm> {
 
   String nama = '';
   String stok = '';
-  String jumlahPinjam = '';
-  String tanggalPinjam = '';
-  String tanggalKembali = '';
+  String idKategori = '';
 
   @override
   void initState() {
@@ -31,6 +29,7 @@ class _PinjamFormState extends State<PinjamForm> {
     con.resIdBarang.listen((value) {
       nama = value.data.nama;
       stok = value.data.stok;
+      idKategori = value.data.idKategori;
 
       print(nama);
       setState(() {});
@@ -40,22 +39,26 @@ class _PinjamFormState extends State<PinjamForm> {
   final namaController = TextEditingController();
   final jumlahPinjamController = TextEditingController();
   final tanggalPinjamController = TextEditingController();
+  final datePinjamController = TextEditingController();
   final tanggalKembaliController = TextEditingController();
+  final dateKembaliController = TextEditingController();
 
   addPinjam() async {
     String nama = namaController.text;
     String jumlahPinjam = jumlahPinjamController.text;
-    String tanggalPinjam = tanggalPinjamController.text;
-    String tanggalKembali = tanggalKembaliController.text;
+    String tanggalPinjam = datePinjamController.text;
+    String tanggalKembali = dateKembaliController.text;
 
     if (nama == '' ||
+        int.parse(jumlahPinjam) >= int.parse(stok) ||
         jumlahPinjam == '' ||
         tanggalPinjam == '' ||
         tanggalKembali == '') {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text('Form Harus Diisi !!')));
     } else {
-      con.addPinjam(context, nama, jumlahPinjam, tanggalPinjam, tanggalKembali);
+      con.addPinjam(context, '1', widget.idBarang, idKategori, nama,
+          jumlahPinjam, tanggalKembali);
       namaController.text = '';
       jumlahPinjamController.text = '';
       tanggalPinjamController.text = '';
@@ -67,6 +70,7 @@ class _PinjamFormState extends State<PinjamForm> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: Text('Form Peminjaman'),
       ),
@@ -87,6 +91,7 @@ class _PinjamFormState extends State<PinjamForm> {
               child: Padding(
                 padding: EdgeInsets.all(10.0),
                 child: TextField(
+                  controller: namaController,
                   decoration: InputDecoration(
                       hintText: "Nama Lengkap",
                       labelText: "Nama Lengkap",
@@ -96,29 +101,59 @@ class _PinjamFormState extends State<PinjamForm> {
               ),
             ),
             Container(
-              child: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: InputDatePickerFormField(
-                  fieldLabelText: 'Tanggal Pinjam',
-                  firstDate: DateTime(1990),
-                  lastDate: DateTime(2021),
-                ),
+              padding: EdgeInsets.symmetric(horizontal: 30),
+              margin: EdgeInsets.only(bottom: 10),
+              child: TextField(
+                controller: tanggalPinjamController,
+                textAlign: TextAlign.left,
+                onTap: () async {
+                  DateTime date = DateTime(1900);
+                  FocusScope.of(context).requestFocus(new FocusNode());
+
+                  date = await showDatePicker(
+                    context: context,
+                    initialDate: DateTime.now(),
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2100),
+                  );
+
+                  String formattedDate = DateFormat('yyyy-MM-dd').format(date);
+                  tanggalPinjamController.text = formattedDate;
+                  DateTime datetime = DateTime.parse(formattedDate);
+                  datePinjamController.text = datetime.toString();
+                },
               ),
             ),
             Container(
-              child: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: InputDatePickerFormField(
-                  fieldLabelText: 'Tanggal Kembali',
-                  firstDate: DateTime(1990),
-                  lastDate: DateTime(2021),
-                ),
+              padding: EdgeInsets.symmetric(horizontal: 30),
+              margin: EdgeInsets.only(bottom: 10),
+              child: TextField(
+                controller: tanggalKembaliController,
+                textAlign: TextAlign.left,
+                onTap: () async {
+                  DateTime date = DateTime(1900);
+                  FocusScope.of(context).requestFocus(new FocusNode());
+
+                  date = await showDatePicker(
+                    context: context,
+                    initialDate: DateTime.now(),
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2100),
+                  );
+
+                  String formattedDate = DateFormat('yyyy-MM-dd').format(date);
+                  tanggalKembaliController.text = formattedDate;
+                  DateTime datetime = DateTime.parse(formattedDate);
+                  dateKembaliController.text = datetime.toString();
+                },
               ),
             ),
             Container(
               child: Padding(
                 padding: EdgeInsets.all(10.0),
                 child: TextField(
+                  controller: jumlahPinjamController,
+                  keyboardType: TextInputType.number,
                   decoration: InputDecoration(
                       hintText: "jumlah Terpinjam",
                       labelText: "jumlah Barang",

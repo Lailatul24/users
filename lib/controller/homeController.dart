@@ -31,11 +31,17 @@ class HomeController {
     }
   }
 
-  void addPinjam(BuildContext context, String nama, String jumlahPinjam,
-      String tanggalPinjam, String tanggalKembali) async {
+  void addPinjam(
+      BuildContext context,
+      String idUser,
+      String idBarang,
+      String idKategori,
+      String nama,
+      String stok,
+      String tanggalKembali) async {
     try {
       await repostory.createPinjam(
-          context, nama, jumlahPinjam, tanggalPinjam, tanggalKembali);
+          context, idUser, idBarang, idKategori, nama, stok, tanggalKembali);
     } catch (e) {
       print(e.toString());
     }
