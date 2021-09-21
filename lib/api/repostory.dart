@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:users/api/resource.dart';
 
 class Repostory {
@@ -5,5 +6,10 @@ class Repostory {
 
   Future getBarang() => api.getBarang();
 
-  Future getBarangId(String id) => api.getBarangId(id);
+  Future getBarangId(String idBarang) => api.getBarangId(idBarang);
+
+  Future createPinjam(BuildContext context, String nama, String jumlahPinjam,
+          String tanggalPinjam, String tanggalKembali) =>
+      api.createPinjam(
+          context, nama, jumlahPinjam, tanggalPinjam, tanggalKembali);
 }

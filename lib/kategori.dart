@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:users/controller/homeController.dart';
 import 'package:users/model/barangModel.dart';
+import 'package:users/pinjam.dart';
 import 'package:users/theme.dart';
 
 class Kategori extends StatefulWidget {
@@ -55,29 +56,33 @@ class _KategoriState extends State<Kategori> {
       ),
     );
   }
-}
 
-Widget list(String idBarang, String nama, String stok) {
-  return Card(
-    shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10.0),
-        side: BorderSide(color: Colors.grey, width: 3)),
-    child: Container(
-      child: Row(
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Text(
+  Widget list(String idBarang, String nama, String stok) {
+    return Card(
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(9.0),
+          side: BorderSide(color: Colors.grey, width: 2)),
+      child: Container(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: ListTile(
+              title: Text(
                 nama,
-                style: TextStyle(fontSize: 24, color: Colors.black),
+                style: TextStyle(
+                  fontSize: 25,
+                ),
               ),
-              Text(stok),
-            ],
-          ),
-        ],
+              subtitle: Text(
+                stok,
+                style: TextStyle(fontSize: 15),
+              ),
+              onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => PinjamForm(idBarang: idBarang),
+                  ))),
+        ),
       ),
-    ),
-  );
+    );
+  }
 }

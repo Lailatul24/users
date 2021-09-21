@@ -12,7 +12,6 @@ class _BottomNavScreenState extends State<BottomNavScreen> {
   final List _screens = [
     Dashboard(),
     Kategori(),
-    Scaffold(),
   ];
   int _currentIndex = 0;
 
