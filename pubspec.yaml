@@ -31,6 +31,9 @@ dependencies:
   google_fonts: ^2.1.0
   bubble_tab_indicator: ^0.1.4
   fl_chart: ^0.9.4
+  rxdart: ^0.27.2
+  http: ^0.13.3
+
 
 dev_dependencies:
   flutter_test:
